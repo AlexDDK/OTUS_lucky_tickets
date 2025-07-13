@@ -6,22 +6,27 @@ def counting (n):
     if n < 1:
         return 0
     
+    # Кэш с предыдущего расчета
     cache = []
+
     def get_sum (array):
         return sum(map(lambda x: x ** 2, array))
     
-
+    # Cчитаем по порядку для 1-значных, потом для 2-значных, и т.д.
     for digit_count in range(1,n + 1):
         if digit_count == 1:
             cache = [1]*(digit_count*9 + 1)
         else:
+            # Cоздаем матрицу (таблицу) и заполняем нулями
             table =  [[0] * (n*9+1) for _ in range(10)]
+            # Заполняем таблицу значениями из кэша (каждую строку сдвигаем на 1)
             for string in range(10):
                 for column in range (0, n*9+1):
                     if 0 <= column - string < len(cache):
                         table[string][column] = cache[column - string]
                     else:
                         table[string][column] = 0 
+            # Cчитаем сумму по столбцам (инвертируем и считаем сумму по строкам)
             cache = [sum(column) for column in zip(*table)]
     
     return get_sum(cache)
